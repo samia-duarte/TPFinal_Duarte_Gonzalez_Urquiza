@@ -3,8 +3,8 @@ import random
 import pygame as pg
 import os
 from clases_plantas import Sol, NPC, Planta, Girasol, Nuez, BotonPlanta, Guisante, LanzaGuisantes, LanzaGuisantesFrio
-from funciones_locas_dibujos import dibujar_fondo_grilla, dibujar_soles_hud, dibujar_barra_lateral, botones_plantas_armado
-from clase_zombies_prueba import ZombieNormal, ZombieConCono, ZombieConBalde
+from funciones_dibujos import dibujar_fondo_grilla, dibujar_soles_hud, dibujar_barra_lateral, botones_plantas_armado
+from clase_zombies import ZombieNormal, ZombieConCono, ZombieConBalde
 
 pg.init()
 pg.mixer.init()
