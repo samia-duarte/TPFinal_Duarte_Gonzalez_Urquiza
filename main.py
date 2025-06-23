@@ -10,6 +10,7 @@ pg.init()
 pg.mixer.init()
 try:
     #=======Implementación de imaes=======
+
     #----PLANTAS----
     ima_papa_plant = pg.image.load(os.path.join('assets', 'imagenes', 'papa.png'))
     ima_girasol_plant = pg.image.load(os.path.join('assets', 'imagenes', 'girasol.png')) 
@@ -18,19 +19,29 @@ try:
     ima_pee_frio_plant = pg.image.load(os.path.join('assets', 'imagenes', 'lanzaguizantes_hielo.png'))
     ima_guisante = pg.image.load(os.path.join('assets', 'imagenes', 'guisante.png'))
     ima_guisante_frio = pg.image.load(os.path.join('assets', 'imagenes', 'guisante_hielo.png'))
+
     #----ZOMBIES----
     ima_zombie_n = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_sf_n.png'))
     ima_zombie_cono = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_cono.png'))
     ima_zombie_balde = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_balde.png'))
+
     #----PLANTAS_BOTONOES----
     ima_papa_boton = pg.image.load(os.path.join('assets', 'imagenes', 'papa.png'))
     ima_girasol_boton = pg.image.load(os.path.join('assets', 'imagenes', 'girasol.png'))
     ima_pee_boton = pg.image.load(os.path.join('assets', 'imagenes', 'lanzaguizantes.png'))
     ima_pee_frio_boton = pg.image.load(os.path.join('assets', 'imagenes', 'lanzaguizantes_hielo.png'))
+
     #----OBJETOS----
     ima_patio = pg.image.load(os.path.join('assets', 'imagenes', 'patio_definitivo2.png'))
     ima_pasto = pg.image.load(os.path.join('assets', 'imagenes', 'pasto.png'))
     ima_sol = pg.image.load(os.path.join('assets', 'imagenes', 'sol.png'))
+
+    #----GAME-OVER----
+    w, h = ima_patio.get_size()
+    ima_game_over = pg.image.load(os.path.join('assets', 'imagenes', 'game_over.jpg'))
+    ima_game_over = pg.transform.scale(pg.image.load(os.path.join('assets', 'imagenes', 'game_over.jpg')), (w,h))
+    sonido_game_over = pg.mixer.Sound(os.path.join('assets', 'soundtrack', 'sonido_game_over.mp3'))
+    
     print('The bluetooth device is connected as succesfully')
 except pg.error as e: 
     print(f'Error Pygame cargando la ima!: {e}')
@@ -122,6 +133,8 @@ class Oleadas:
 
 filas_destruidas = []
 
+game_over = False
+tiempo_game_over = 0
 soles_actuales = 100 #vamos a empezar con 100 para poder trabajar, dps empieza en 0
 sol_rate = 8
 ultimo_sol_caido_global = time.time()
@@ -129,7 +142,6 @@ ultimo_sol_caido_global = time.time()
 
 #=======SOPORTE TECNICO DEL JUEGO=======
 #----SCREEN SIZE----
-w, h = ima_patio.get_size()
 screen = pg.display.set_mode((w, h))
 pg.display.set_caption('PVZ')
 #----STATS GRILLA----
@@ -289,7 +301,28 @@ while running:
                         zombies_a_eliminar.append(i) #crea lista con indices i de esos zombies
             else:
                 print("¡GAME OVER! Te llegó otro zombie en la misma fila.")
+                game_over = True
+                tiempo_game_over = time.time()
+                pg.mixer.music.stop()
+                sonido_game_over.play()
+
+                screen.blit(ima_game_over,(0,0))
+                pg.display.update()
+
+                while time.time() - tiempo_game_over < 6:
+                    for event in pg.event.get():
+                        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                            running = False
+                            game_over = False
+                            break
+                    if not running:
+                        break
+                    clock.tick(FPS)
+
                 running = False
+
+
+
         elif resultado:  # si el zombie destruyó una planta
             plantas_en_juego.remove(resultado) 
             grilla_ocupada[resultado.fila][resultado.col] = None #libera espacio para nuevas plantas
