@@ -27,7 +27,7 @@ class Zombie(NPC):
         self.rect.x = int(self.x) #posición que usa pg para dibujar (entero)
         self.fila = fila
         self.hp = salud_inicial
-        self.velocidad_caminando_base = 2 #acá le cambiamos la velocidad a los zombicitos
+        self.velocidad_caminando_base = 3 #acá le cambiamos la velocidad a los zombicitos
         self.max_hp = salud_inicial
         
         #-----COMPORTAMINETO ZOMBIES------

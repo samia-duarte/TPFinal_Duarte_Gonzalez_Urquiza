@@ -2,14 +2,19 @@ import time
 import random
 import pygame as pg
 import os
+
+# Importaciones de clases
 from clases_plantas import Sol, NPC, Planta, Girasol, Nuez, BotonPlanta, Guisante, LanzaGuisantes, LanzaGuisantesFrio
 from funciones_dibujos import dibujar_fondo_grilla, dibujar_soles_hud, dibujar_barra_lateral, botones_plantas_armado
 from clase_zombies import ZombieNormal, ZombieConCono, ZombieConBalde
 
+# Inicializar pygame
 pg.init()
 pg.mixer.init()
+
+# Manejo de errores try-except
 try:
-    #=======Implementación de imaes=======
+    #=======Implementación de imágenes=======
 
     #----PLANTAS----
     ima_papa_plant = pg.image.load(os.path.join('assets', 'imagenes', 'papa.png'))
@@ -37,10 +42,9 @@ try:
     ima_sol = pg.image.load(os.path.join('assets', 'imagenes', 'sol.png'))
 
     #----GAME-OVER----
-    w, h = ima_patio.get_size()
     ima_game_over = pg.image.load(os.path.join('assets', 'imagenes', 'game_over.jpg'))
+    w, h = ima_patio.get_size()
     ima_game_over = pg.transform.scale(pg.image.load(os.path.join('assets', 'imagenes', 'game_over.jpg')), (w,h))
-    sonido_game_over = pg.mixer.Sound(os.path.join('assets', 'soundtrack', 'sonido_game_over.mp3'))
     
     print('The bluetooth device is connected as succesfully')
 except pg.error as e: 
@@ -53,37 +57,38 @@ except FileNotFoundError as e:
     pg.quit()
     exit()
 
-# Configuración de oleadas
+# ==== Configuración de oleadas ====
 WAVE_DATA = [
     # (inicio_seg, duracion_seg, [tipos_zombie], spawn_min, spawn_max)
     (5,   30,   [ZombieNormal],          5,  8),   # Oleada 1
-    (0,   40,   [ZombieNormal, ZombieConCono], 8,  12),  # Oleada 2 (inicio=0 porque se activa al terminar la anterior)
+    (0,   40,   [ZombieNormal, ZombieConCono], 8,  12),  # Oleada 2
     (0,   60,   [ZombieNormal, ZombieConCono, ZombieConBalde], 12, 15), # Oleada 3
 ]
 
 class Oleadas:
     def __init__(self, wave_data):
-        self.wave_data = wave_data #configuracion de las oleadas
-        self.oleada_actual = -1 #indica la oleada actual (-1 es que no comenzó ninguna)
-        self.tiempo_inicio_oleada = 0 #tiempo que comenzó la oleada actual
+        self.wave_data = wave_data #! configuracion de las oleadas
+        self.oleada_actual = -1 #! indica la oleada actual (-1 es que no comenzó ninguna)
+        self.tiempo_inicio_oleada = 0 #! tiempo que comenzó la oleada actual
         self.zombies_por_generar = 0 
         self.zombies_generados = 0 
         self.tipos_zombies_actuales = [] 
         self.tiempo_ultimo_spawn = 0 
-        self.intervalo_spawn = 20  # segundos entre zombies
-        self.oleada_activa = False #si hay una oleada activa
+        self.intervalo_spawn = 10  #! segundos entre zombies
+        self.oleada_activa = False #! si hay una oleada activa
         self.tiempo_inicio_juego = time.time() #sirve para calcular segs desde la primera oleada
         
-    def actualizar(self, zombis_activos, c_size, margen_x, ancho_grilla, ima_zombie_n=None):
+    def actualizar(self, zombis_activos: list, c_size: int, margen_x: float, ancho_grilla: float, ima_zombie_n: pg.Surface = None) -> None:
         tiempo_actual = time.time()
         tiempo_transcurrido = tiempo_actual - self.tiempo_inicio_juego
         
-        # inicia primera oleada si es tiempo y no hay oleada activa
+        # Iniciar primera oleada cuando sea tiempo
+        #! inicia primera oleada si pasó el tiempo (5 segs + generación de zombie) y no hay oleada activa
         if self.oleada_actual == -1 and tiempo_transcurrido >= self.wave_data[0][0]:
             self.iniciar_siguiente_oleada()
         
-        # si hay una oleada de zombies en curso y todavía no salieron todos los zombies que deberían
-        if self.oleada_activa and self.zombies_generados < self.zombies_por_generar: 
+        #! si hay una oleada de zombies en curso y todavía no salieron todos los zombies que deberían, genera
+        if self.oleada_activa and self.zombies_generados < self.zombies_por_generar: #sin esto se generan zombies infinitamente aunque la oleada se complete
             if tiempo_actual - self.tiempo_ultimo_spawn > self.intervalo_spawn:
                 self.generar_zombie(zombis_activos, c_size, margen_x, ancho_grilla, ima_zombie_n)
                 self.tiempo_ultimo_spawn = tiempo_actual
@@ -95,20 +100,20 @@ class Oleadas:
             self.oleada_actual + 1 < len(self.wave_data)):
             self.iniciar_siguiente_oleada()
     
-    #esto basicamente reinicia todo para que comience la siguiente oleada
-    def iniciar_siguiente_oleada(self):
-        #incremento del indice de oleada
+    #! esto basicamente reinicia todo para que comience la siguiente oleada
+    def iniciar_siguiente_oleada(self) -> None:
+        #! incremento del indice de oleada
         self.oleada_actual += 1
-        #obtener datos de oleada actual ignorando duración pq se mantiene igual
+        #! obtener datos de oleada actual ignorando duración pq se mantiene igual
         _, _, tipos, min_z, max_z = self.wave_data[self.oleada_actual]
         self.tipos_zombies_actuales = tipos
-        self.zombies_por_generar = random.randint(min_z, max_z) #para que sea random la cant d zombies que se generen
-        self.zombies_generados = 0 #reinicio del contador d zombies generados
-        self.tiempo_ultimo_spawn = time.time() #ahora el tiempo desde el ult spawn es el tiempo actual
+        self.zombies_por_generar = random.randint(min_z, max_z) #! para que sea random la cant d zombies que se generen
+        self.zombies_generados = 0 #! reinicio del contador d zombies generados
+        self.tiempo_ultimo_spawn = time.time() #! ahora el tiempo desde el ult spawn es el tiempo actual
         self.oleada_activa = True 
         print(f"¡OLEADA {self.oleada_actual+1} INICIADA!")
             
-    def generar_zombie(self, zombis_activos, c_size, margen_x, ancho_grilla, imagen_zombie=None):
+    def generar_zombie(self, zombis_activos: list, c_size: int, margen_x: float, ancho_grilla: float, imagen_zombie: pg.Surface = None) -> None:
         fila = random.randint(0, 4)
         TipoZombie = random.choice(self.tipos_zombies_actuales)
         
@@ -117,7 +122,7 @@ class Oleadas:
             imagen = ima_zombie_cono
         elif TipoZombie == ZombieConBalde:
             imagen = ima_zombie_balde
-        else:  # ZombieNormal
+        else:  
             imagen = ima_zombie_n
         
         ima_escalada = pg.transform.scale(imagen, (c_size, c_size))
@@ -131,25 +136,30 @@ class Oleadas:
         )
         zombis_activos.append(nuevo_zombie)
 
-filas_destruidas = []
+# === Variables globales ===
 
+filas_destruidas = []
 game_over = False
 tiempo_game_over = 0
-soles_actuales = 100 #vamos a empezar con 100 para poder trabajar, dps empieza en 0
+soles_actuales = 0 #vamos a empezar con 100 para poder trabajar, dps empieza en 0
 sol_rate = 8
 ultimo_sol_caido_global = time.time()
 
 
 #=======SOPORTE TECNICO DEL JUEGO=======
-#----SCREEN SIZE----
+
+#---- CONFIGURACIÓN DE PANTALLA ----
+w, h = ima_patio.get_size()
 screen = pg.display.set_mode((w, h))
 pg.display.set_caption('PVZ')
-#----STATS GRILLA----
+
+#---- CONFIGURACIÓN DE GRILLA ----
 fil = 5
 col = 10
-c_size = 84 # El tamaño de celda que mejor funcionó
+c_size = 84 # Tamaño de celda
 alto_grilla = fil * c_size 
 ancho_grilla = col * c_size - 90
+
 #----Margenes grilla y ajustes----
 margen_x = ((w - ancho_grilla) / 2) + 40
 margen_y = ((h - alto_grilla) / 2) - 7
@@ -160,36 +170,51 @@ margen_x += ajuste_horizontal
 #///////////////////////////////////
 
 #----Listas de Control----
+
 plantas_en_juego = []
 soles_cayendo = []
 proyectiles_activos = []
-zombis_activos = [] # Lista vacía para zombis
+zombis_activos = [] 
 grilla_ocupada = [[None for _ in range(col)] for _ in range(fil)]
+
 #----SELECCION DE PLANTAS (valores in)----
-planta_seleccionada = None # Almacena la CLASE de la planta seleccionada (ej. Girasol)
+#! estas variables manejan la selección temporal al elegir una planta
+planta_seleccionada = None #! Almacena la CLASE de la planta seleccionada (ej. Girasol)
 planta_costo_seleccionada = 0
 imagen_seleccionada_para_colocar = None
+
 #----VALORES TECNICOS----
 FPS = 60
 clock = pg.time.Clock()
 test_font = pg.font.Font(None, 40)
+
 #----SOUNDTRACK----
 musica_fondo = pg.mixer.music.load(os.path.join('assets', 'soundtrack', 'plants-vs-zombies-soundtrack-day-stage.mp3'))
+sonido_game_over = pg.mixer.Sound(os.path.join('assets', 'soundtrack', 'sonido_game_over.mp3'))
 pg.mixer.music.play(-1)
 pg.mixer.music.set_volume(0.8)
-#===INICIALIZACION COSAS JUEGO===
+
+#===INICIALIZACION COSAS DEL JUEGO===
+
 # --- Inicialización de los botones de planta ---
 botones = 90
 botones_plantas = []
 y_actual_boton = botones
+
+# Creación de botones para cada tipo de planta
 y_actual_boton = botones_plantas_armado(botones_plantas, y_actual_boton, Girasol, ima_girasol_boton, ima_girasol_plant)
 y_actual_boton = botones_plantas_armado(botones_plantas, y_actual_boton, Nuez, ima_papa_boton, ima_papa_plant)
-# Agregar después de los otros botones
 y_actual_boton = botones_plantas_armado(botones_plantas, y_actual_boton, LanzaGuisantes, ima_pee_boton, ima_pee_plant)
 y_actual_boton = botones_plantas_armado(botones_plantas, y_actual_boton, LanzaGuisantesFrio, ima_pee_frio_boton, ima_pee_frio_plant)
+
+# === Inicialización del juego ===
 wave_manager = Oleadas(WAVE_DATA)
+wave_manager.tiempo_inicio_juego = time.time()
+
 zombis_activos = [] 
-#----GAME LOOP----
+
+# Mapeo de tipos de planta e imágenes
+#! Relaciona cada clase planta con su imagen, muestra el "fantasma" al arrastrar plantas
 running = True
 plant_ima_map = {
     Girasol: ima_girasol_plant,
@@ -197,59 +222,80 @@ plant_ima_map = {
     LanzaGuisantes: ima_pee_plant,
     LanzaGuisantesFrio: ima_pee_frio_plant
 }
-while running:
-    tiempo_atm = time.time()
-    dt = clock.tick(FPS) / 1000.0 
 
+# === GAME LOOP ===
+
+while running:
+    # --- Preaparación del frame ---
+    tiempo_atm = time.time()
+    dt = clock.tick(FPS) / 1000.0 #! calcula delta time (tiempo entre frames en segs)
+
+    # --- Manejo de eventos ---
     for event in pg.event.get():
+
         if event.type == pg.QUIT:
             running = False
+
         elif event.type == pg.KEYDOWN:
             if planta_seleccionada != None and event.key == pg.K_ESCAPE:
                 planta_seleccionada = None
                 planta_costo_seleccionada = 0
                 imagen_seleccionada_para_colocar = None
+            
+            # Tecla Q/ESC sale del juego
             elif event.key == pg.K_q or event.key == pg.K_ESCAPE:
+
                 running = False
+        # Evento clic para obtener posición del click
         elif event.type == pg.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
-#---------SELECCION PLANTAS---------
+
+#---------SELECCIÓN PLANTAS---------
             clic_en_boton = False
             for boton in botones_plantas:
-                if boton.clic_en(event.pos): #.clic_en es nuestra funcion
+                if boton.clic_en(event.pos): #! .clic_en es nuestra funcion
                     clic_en_boton = True         
-                    if soles_actuales >= boton.costo:
+                    if soles_actuales >= boton.costo: 
                         planta_seleccionada = boton.tipo_planta
                         planta_costo_seleccionada = boton.costo
                         print(f"Planta seleccionada: {planta_seleccionada.__name__} (Costo: {planta_costo_seleccionada})")
                         imagen_seleccionada_para_colocar = boton.imagen_planta_completa
                     else:
                         print("¡No tienes suficientes soles para esta planta!")
-                    #'''
                     break
 
+            # --- Si no fue click en boton, verifica otros elementos ---
             if not clic_en_boton:
                 sol_recolectado = False
+
+                # Clic en soles para recolectar
                 for sol in list(soles_cayendo):
                     if sol.clic_en(event.pos):
                         soles_actuales += sol.valor
                         soles_cayendo.remove(sol)
                         sol_recolectado = True
                         break
+
+                # Clic en grilla para colocar planta
                 if not sol_recolectado:
+
+                    # Verifica que el clic esté dentro del área del juego
                     if planta_seleccionada and margen_x <= mouse_x < (margen_x + ancho_grilla) and margen_y <= mouse_y < (margen_y + alto_grilla):
-                    #Que no se va de la grilla 
                         celda_col = int((mouse_x - margen_x) // c_size)
                         celda_fila = int((mouse_y - margen_y) // c_size)
+
                         if grilla_ocupada[celda_fila][celda_col] is None:
+                                
+                                # Crea la nueva planta según el tipo
                                 if planta_seleccionada == Girasol:
                                     nueva_planta = planta_seleccionada(celda_fila, celda_col, imagen_seleccionada_para_colocar, c_size, margen_y, margen_x, h, ima_sol)
                                 else: 
                                     nueva_planta = planta_seleccionada(celda_fila, celda_col, imagen_seleccionada_para_colocar, c_size, margen_y, margen_x)
                                 if soles_actuales >= nueva_planta.costo:
-                                    plantas_en_juego.append(nueva_planta)
+                                    plantas_en_juego.append(nueva_planta) 
                                     grilla_ocupada[celda_fila][celda_col] = nueva_planta
                                     soles_actuales -= nueva_planta.costo
+                                    #! resetea la selección
                                     planta_seleccionada = None
                                     planta_costo_seleccionada = 0
                                     imagen_seleccionada_para_colocar = None
@@ -259,56 +305,67 @@ while running:
                             print("¡Esta celda ya está ocupada!")
                     elif planta_seleccionada: # Si hay una planta seleccionada pero se hizo clic fuera de la grilla
                         print("Haz clic en una celda válida de la grilla para colocar la planta.")
+
 #---------SELECCION SOLES---------
     # Generación GLOBAL de soles (caen del cielo)
     if tiempo_atm - ultimo_sol_caido_global > sol_rate:
         rand_col_idx = random.randint(0, col - 1) #x random pero siempre arriba
-        sol_x = margen_x + rand_col_idx * c_size + (c_size // 2) - (c_size // 4) # c_size//4 para centrar en casilla
-        sol_y_inicio = -50 # encima pantalla
+        sol_x = margen_x + rand_col_idx * c_size + (c_size // 2) - (c_size // 4) #! c_size//4 para centrar en casilla
+        sol_y_inicio = -50 #! encima pantalla
+        #! crea nuevo sol que cae desde arriba
         soles_cayendo.append(Sol(sol_x, sol_y_inicio, c_size, margen_y, h, ima_sol))
         ultimo_sol_caido_global = tiempo_atm
 
-    # Actualizar y eliminar soles
+    # --- ACTUALIZACIÓN DE ENTIDADES ---
+    # Actualiza soles existentes
     soles_a_eliminar = []
     for sol in soles_cayendo:
-        if sol.actualizar(): # Si sol.actualizar() devuelve True, significa que debe ser eliminado
+        if sol.actualizar(): #! Si devuelve True, el sol debe eliminarse
             soles_a_eliminar.append(sol)
     for sol in soles_a_eliminar:
         soles_cayendo.remove(sol)
+
+    # Actualiza plantas
     for planta in plantas_en_juego:
+        #! girasoles generan soles
         if isinstance(planta, Girasol):
             planta.actualizar(soles_cayendo, c_size, margen_y, h, ima_sol)
+        #! plantas atacantes disparan proyectiles
         elif isinstance(planta, (LanzaGuisantes, LanzaGuisantesFrio)):
             ima_guisante_a_usar = ima_guisante_frio if isinstance(planta, LanzaGuisantesFrio) else ima_guisante
             planta.actualizar(zombis_activos, proyectiles_activos, dt, ima_guisante_a_usar)
    
+   # --- Gestión de oleadas y zombies ---
     wave_manager.actualizar(zombis_activos, c_size, margen_x, ancho_grilla, ima_zombie_n)
 
+    # Actualiza zombies
     zombies_a_eliminar = [] 
-
     for i, zombie in enumerate(zombis_activos):
         resultado = zombie.actualizar(plantas_en_juego, dt) # =gameover, planta si destruyó una y None si sigue vivo
         
+        # 1. Zombie llegó a la casa (Game Over)
         if resultado == 'gameOver':
             fila_destruida = zombie.fila in filas_destruidas
-            
-            if not fila_destruida: #si la fila no estaba marcada como destruida antes
-                filas_destruidas.append(zombie.fila) #para detectar game over en otros zombies
+            if not fila_destruida: #! si la fila no estaba marcada como destruida antes
+                filas_destruidas.append(zombie.fila) #! para detectar game over en otros zombies
                 # añade todos los zombies de la misma fila
                 zombies_a_eliminar = []
                 for i, z in enumerate(zombis_activos):
                     if z.fila == zombie.fila: #filtra los zombies que están en la misma fila que el que activó el gameover
                         zombies_a_eliminar.append(i) #crea lista con indices i de esos zombies
             else:
+                # Activa secuencia del Game Over
                 print("¡GAME OVER! Te llegó otro zombie en la misma fila.")
                 game_over = True
                 tiempo_game_over = time.time()
                 pg.mixer.music.stop()
                 sonido_game_over.play()
-
+                
+                # Muestra pantalla de Game Over
                 screen.blit(ima_game_over,(0,0))
                 pg.display.update()
 
+                # Espera 6 segundos antes de cerrar
                 while time.time() - tiempo_game_over < 6:
                     for event in pg.event.get():
                         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
@@ -318,22 +375,20 @@ while running:
                     if not running:
                         break
                     clock.tick(FPS)
-
                 running = False
 
-
-
-        elif resultado:  # si el zombie destruyó una planta
+        # 2. Zombie destruyó una planta
+        elif resultado:
             plantas_en_juego.remove(resultado) 
-            grilla_ocupada[resultado.fila][resultado.col] = None #libera espacio para nuevas plantas
-        #es una matriz (list de l) que representa jardín. cada celda puede estar ocupada por una planta:
-        #ej: grilla_ocup[1][2] = objeto_planta, vacía(None)
+            grilla_ocupada[resultado.fila][resultado.col] = None #! libera espacio para nuevas plantas
+        #! es una matriz (list de l) que representa jardín. cada celda puede estar ocupada por una planta:
+        #! ej: grilla_ocup[1][2] = objeto_planta, vacía(None)
 
-        # zombies muertos por daño
+        # 3. Zombies muertos por daño
         if zombie.hp <= 0:
             zombies_a_eliminar.append(i)
 
-    # elimina zombies muertos (deja los indices mas altos 1ro para evitar errores)
+    # Elimina zombies muertos #!de atrás para adelante así evitar índices inválidos
     for i in sorted(zombies_a_eliminar, reverse=True):
         if i < len(zombis_activos): 
             zombis_activos.pop(i)
@@ -342,55 +397,72 @@ while running:
     for i, proyectil in enumerate(proyectiles_activos):
         proyectil.actualizar(dt)
     """
-    #------------------------AGREGO LEON LA PARTE DE LOS LANZA GUISANTES-------------------------------
+    
+    # Actualiza proyectiles (guisantes)
     pee_a_eliminar = []
     for i, proyectil in enumerate(proyectiles_activos):
-        proyectil.actualizar(dt) #mueve ->
+        proyectil.actualizar(dt) #! mueve ->
         zombie_golpeado = None
         for zombie in zombis_activos:
             if proyectil.fila == zombie.fila and proyectil.rect.colliderect(zombie.rect) and zombie.hp > 0 and i not in pee_a_eliminar:
-            #coliusiona si misma fila y zombie vivo y si todavia no le pego (si le pego se va)
+            #! coliusiona si misma fila y zombie vivo y si todavia no le pego (si le pego se va)
                 zombie_golpeado = zombie
-                break #E FIN (para no wombocombo)
+                break 
         if zombie_golpeado:
             zombie_golpeado.hp -= proyectil.daño
             print(f'DEBUGG: Pee golpeo a zombie en fila {zombie_golpeado.fila}. HP Zombie: {zombie_golpeado.hp}')
             if proyectil.es_congelante:
                 zombie_golpeado.aplicar_slowmow(tiempo_atm)
             pee_a_eliminar.append(i)
-        if proyectil.rect.x > w:
+
+        # Elimina proyectiles que salen de la pantalla
+        if proyectil.rect.x > (w + 50):
             pee_a_eliminar.append(i)
-    #-------------------------------------------------------------------------------------------------------   
+
+        # Elimina proyectiles marcados
         for i in sorted(list(set(pee_a_eliminar)), reverse=True):
             if i < len(proyectiles_activos):
                 proyectiles_activos.pop(i)
+
         wave_manager.actualizar(zombis_activos, c_size, margen_x, ancho_grilla, ima_zombie_n)
-        # verifica la colisión con los zombies
+        
+        # Verifica la colisión con los zombies
         for zombie in zombis_activos:
             if zombie.rect.colliderect(proyectil.rect):
                 if zombie.recibir_dano(proyectil.daño):
                     if proyectil.es_congelante:
                         zombie.aplicar_slowmow(time.time())  # activa slowmow
                 break
+
 #---------SCREEN---------
+    
+    # Capa 1: Fondo
     screen.blit(ima_patio, (0,0)) # Usar la imagen de patio cargada
+
+    # Capa 2: Grilla del juego
     dibujar_fondo_grilla(ancho_grilla, alto_grilla, col, fil, c_size, screen, margen_x, margen_y, ima_pasto) # Dibujar la grilla del pasto
 
+    # Capa 3: Plantas
     for planta in plantas_en_juego:
         planta.dibujar(screen)
 
+    # Capa 4: Soles
     for sol in soles_cayendo:
         sol.dibujar(screen)
 
+    # Capa 5: Proyectiles
     for proyectil in proyectiles_activos:
         proyectil.dibujar(screen)
 
-    dibujar_barra_lateral(botones_plantas, soles_actuales, screen, planta_seleccionada, test_font) # Dibujar la barra lateral y los botones
-
+    # Capa 6: Zombies
     for zombie in zombis_activos:
-        zombie.actualizar(plantas_en_juego, dt)  # Actualiza el comportamiento
+        zombie.actualizar(plantas_en_juego, dt)  #! Actualiza el comportamiento
         zombie.dibujar(screen)
+
+    # Capa 7: Barra lateral con botones de plantas
+    dibujar_barra_lateral(botones_plantas, soles_actuales, screen, planta_seleccionada, test_font)
     
+    # Capa 8: "Fantasma" de planta al arrancar.
     if planta_seleccionada:
         mouse_pos = pg.mouse.get_pos()
         fantasma_img = plant_ima_map.get(planta_seleccionada)
@@ -400,6 +472,8 @@ while running:
             screen.blit(fantasma, mouse_pos)
 
     pg.display.update()
+    
+    # Control de velocidad, mantiene 60 FPS
     clock.tick(FPS)
 
 pg.quit()
