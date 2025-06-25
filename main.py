@@ -87,7 +87,13 @@ class Oleadas:
         self.tiempo_inicio_juego = time.time()
         
     def actualizar(self, zombis_activos: list, c_size: int, margen_x: float, ancho_grilla: float, ima_zombie_n: pg.Surface = None) -> None:
-        '''Actualiza y genera zombies. '''
+        '''Actualiza y genera zombies.
+        Argumentos:
+                zombis_activos (list): lista donde se añaden nuevos zombies.
+                c_size (int): tamaño de celdas en pixeles.
+                margen_x (float): margen horizontal de la grilla.
+                ima_zombie_n (Surface): imagen para zombie normal.
+        '''
         tiempo_actual = time.time()
         tiempo_transcurrido = tiempo_actual - self.tiempo_inicio_juego
         
@@ -110,11 +116,6 @@ class Oleadas:
     def iniciar_siguiente_oleada(self) -> None:
         '''Prepara parámetros para que inicie la siguiente oleada.
         Argumentos:
-            zombis_activos (list): Lista donde se añaden nuevos zombies.
-            c_size (int): Tamaño de las celdas en píxeles.
-            margen_x (float): Margen horizontal de la grilla.
-            ancho_grilla (float): Ancho total del área de juego.
-            ima_zombie_n (Surface, optional): Imagen para zombie normal.
         '''
         self.oleada_actual += 1
         _, _, tipos, min_z, max_z = self.wave_data[self.oleada_actual]
@@ -243,7 +244,10 @@ plant_ima_map = {
 # === GAME LOOP ===
 
 while running:
-    ''' Bucle principal del juego, ejecuta 60 frames por segundo. '''
+    ''' Bucle principal del juego, ejecuta 60 frames por segundo. 
+    1. Manejo de eventos (input).
+    2. Actualización de estado del juego.
+    '''
     # --- Preaparación del frame ---
     tiempo_atm = time.time()
     dt = clock.tick(FPS) / 1000.0
