@@ -41,7 +41,7 @@ class Zombie(NPC):
         self.rect.x = int(self.x) 
         self.fila = fila
         self.hp = salud_inicial
-        self.velocidad_caminando_base = 3
+        self.velocidad_caminando_base = 0.5
         self.max_hp = salud_inicial
         
         #-----COMPORTAMINETO ZOMBIES------
