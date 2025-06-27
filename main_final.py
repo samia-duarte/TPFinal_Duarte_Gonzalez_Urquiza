@@ -4,9 +4,9 @@ import pygame as pg
 import os
 
 # Importaciones de clases
-from clases_plantas import Sol, NPC, Planta, Girasol, Nuez, BotonPlanta, BotonPala, Guisante, LanzaGuisantes, LanzaGuisantesFrio, Podadora
-from funciones_dibujos import dibujar_fondo_grilla, dibujar_soles_hud, dibujar_barra_lateral, botones_plantas_armado, boton_pala_armado
-from clase_zombies import ZombieNormal, ZombieConCono, ZombieConBalde#, Oleadas
+from clases_plantas_final import Sol, NPC, Planta, Girasol, Nuez, BotonPlanta, BotonPala, Guisante, LanzaGuisantes, LanzaGuisantesFrio, Podadora
+from funciones_dibujos_final import dibujar_fondo_grilla, dibujar_soles_hud, dibujar_barra_lateral, botones_plantas_armado, boton_pala_armado
+from clase_zombies_final import ZombieNormal, ZombieConCono, ZombieConBalde#, Oleadas
 
 # Inicializar pygame
 pg.init()
