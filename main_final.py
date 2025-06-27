@@ -23,7 +23,7 @@ try:
     ima_guisante = pg.image.load(os.path.join('assets', 'imagenes', 'guisante.png'))
     ima_guisante_frio = pg.image.load(os.path.join('assets', 'imagenes', 'guisante_hielo.png'))
     #----ZOMBIES----
-    ima_zombie_n = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_sf_n.png'))
+    ima_zombie_n = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_n.png'))
     ima_zombie_cono = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_cono.png'))
     ima_zombie_balde = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_balde.png'))
     #----PLANTAS_BOTONOES----
@@ -33,7 +33,7 @@ try:
     ima_pee_frio_boton = pg.image.load(os.path.join('assets', 'imagenes', 'lanzaguizantes_hielo.png'))
     ima_pala_boton = pg.image.load(os.path.join('assets', 'imagenes', 'pala.png'))
     #----OBJETOS----
-    ima_patio = pg.image.load(os.path.join('assets', 'imagenes', 'patio_definitivo2.png'))
+    ima_patio = pg.image.load(os.path.join('assets', 'imagenes', 'patio_definitivo.png'))
     ima_pasto = pg.image.load(os.path.join('assets', 'imagenes', 'pasto.png'))
     ima_sol = pg.image.load(os.path.join('assets', 'imagenes', 'sol.png'))
     ima_pala = pg.image.load(os.path.join('assets', 'imagenes', 'pala.png'))
