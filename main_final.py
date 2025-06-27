@@ -26,7 +26,7 @@ try:
     ima_zombie_n = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_n.png'))
     ima_zombie_cono = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_cono.png'))
     ima_zombie_balde = pg.image.load(os.path.join('assets', 'imagenes', 'zombie_balde.png'))
-    #----PLANTAS_BOTONOES----
+    #----PLANTAS_BOTONES----
     ima_papa_boton = pg.image.load(os.path.join('assets', 'imagenes', 'papa.png'))
     ima_girasol_boton = pg.image.load(os.path.join('assets', 'imagenes', 'girasol.png'))
     ima_pee_boton = pg.image.load(os.path.join('assets', 'imagenes', 'lanzaguizantes.png'))
@@ -71,7 +71,7 @@ class Oleadas:
         oleada_actual (int): índice de oleada actual (-1 si no se inició)
         zombies_por_generar (int): cantidad de zombies restantes en la oleada
     """
-    def __init__(self, wave_data):
+    def __init__(self, wave_data:list):
         """ Argumentos:
                 wave_data (list): lista de tuplas con configuración de oleadas.
         """
@@ -86,7 +86,7 @@ class Oleadas:
         self.oleada_activa = False 
         self.tiempo_inicio_juego = time.time() 
         
-    def actualizar(self, zombis_activos, c_size, margen_x, ancho_grilla, ima_zombie_n=(0, 255, 0)) -> None: #pongo otro color para ver cual erra
+    def actualizar(self, zombis_activos: list, c_size: int, margen_x: float, ancho_grilla: int, ima_zombie_: pg.Surface=(0, 255, 0)) -> None:
         """Actualiza y genera zombies.
         Argumentos:
                 zombis_activos (list): lista donde se añaden nuevos zombies.
@@ -127,7 +127,7 @@ class Oleadas:
         self.oleada_activa = True 
         print(f"¡OLEADA {self.oleada_actual+1} INICIADA!")
             
-    def generar_zombie(self, zombis_activos, c_size, margen_x, ancho_grilla, imagen_zombie=(255, 0, 0)):
+    def generar_zombie(self, zombis_activos: list, c_size:int, margen_x:float, ancho_grilla:int, imagen_zombie:pg.Surface=(255, 0, 0)) -> None:
         """ Crea nuevo zombie en posición aleatoria. 
         Parámetros:
             zombis_activos (list): lista para agregar el nuevo zombie.

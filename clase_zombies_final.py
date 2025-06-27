@@ -2,11 +2,13 @@ import time
 import pygame as pg
 import random
 from clases_plantas_final import NPC
+
 # --- CONSTANTES DE COLORES ---
 RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
 DARK_GRAY = (64, 64, 64)
 BLUE_TINT = (183, 232, 245, 100)
+
 # --- ZOMBIE CLASE BASE ---
 class Zombie(NPC):
     """Clase base para todos los tipos de zombies.
@@ -70,7 +72,7 @@ class Zombie(NPC):
             self.esta_slowmow = True
         self.tiempo_fin_slowmow = tiempo_actual + duracion
 
-    def off_slowmow(self):
+    def off_slowmow(self) -> None:
         """Termina el efecto de ralentización del zombie."""
         if self.esta_slowmow:
             self.velocidad_actual = self.velocidad_caminando_base
