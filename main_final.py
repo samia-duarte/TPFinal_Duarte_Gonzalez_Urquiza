@@ -14,7 +14,7 @@ pg.mixer.init()
 
 # Manejo de errores try-except
 try:
-    #=======Implementación de imaes=======
+    #=======Implementación de imagenes=======
     #----PLANTAS----
     ima_papa_plant = pg.image.load(os.path.join('assets', 'imagenes', 'papa.png'))
     ima_girasol_plant = pg.image.load(os.path.join('assets', 'imagenes', 'girasol.png')) 

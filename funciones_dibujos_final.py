@@ -1,5 +1,5 @@
 import pygame as pg
-from clases_plantas import BotonPlanta, BotonPala
+from clases_plantas_final import BotonPlanta, BotonPala
 AMARILLO = (255, 255, 0)
 DARK_GREEN = (0, 100, 0)
 GREEN = (0, 200, 0)

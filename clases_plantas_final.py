@@ -1,9 +1,8 @@
 import time
 import pygame as pg
 import random
-#Nota de León: Bienvenido a la sección de clases de plantas. Por ahora aca vamos a dejar solo a los NPC y plantas
-#Actualización Nota León: Contenidos: Sol, Podadora, NPC, Plantas (todas)
-#Los zombies ponganlos en otra carpeta
+#Bienvenido a la sección de clases de plantas. Por ahora aca vamos a dejar solo a los NPC y plantas
+#Contenidos: Sol, Podadora, NPC, Plantas (todas)
 # --- CONSTANTES DE COLORES ---
 AMARILLO = (255, 255, 0)
 DARK_GREEN = (0, 100, 0)
@@ -13,7 +12,7 @@ RED = (255, 0, 0)
 NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
 VERDE_OSCURO_SELECCION = (0,70,0,150)
-#pg.init()
+
 class Sol:
     """
     Maneja a los soles dentro del juego, los que jugadores pueden recolectar.
@@ -40,13 +39,13 @@ class Sol:
         else:
             self.image = pg.Surface((c_size // 2, c_size // 2))
             self.image.fill((255, 255, 0))
-        self.velocidad_caida = random.randint(1, 2) #pq somos copados
+        self.velocidad_caida = random.randint(1, 2) 
         self.tiempo_creacion = time.time()
-        self.vida_util = 8 #segundos antes que desaparezca
+        self.vida_util = 8 
         self.es_de_girasol = es_de_girasol #para que no se interrumpan entre si los timings y distancias caida
         if es_de_girasol == True:
             self.destino_posi_y = posi_y + c_size // 2 # Aterrizan cerca de la base de la planta
-            self.rect.y -= 20 #OJO! .y es donde esta, que es posi_y pero no lo es!!!
+            self.rect.y -= 20 
         else:
             self.destino_posi_y = random.randint(int(margen_y + c_size), int(margen_y + h - c_size // 2))
     def actualizar(self) -> bool:
@@ -58,7 +57,6 @@ class Sol:
         """
         if self.rect.y < self.destino_posi_y:
             self.rect.y += self.velocidad_caida
-            #mini check para que no se valla (._.''')
             if self.rect.y > self.destino_posi_y:
                 self.rect.y = self.destino_posi_y
         if self.rect.y >= self.destino_posi_y and time.time() - self.tiempo_creacion > self.vida_util:
@@ -134,16 +132,13 @@ class NPC:
             alto (int): Alto del NPC.
             imagen_surf (pg.Surface, optional): Superficie de la imagen del NPC. Si es None, se crea un cuadrado rojo. Defaults to None.
         """
-        #Nota de Leon: Usamos imagen_surf = None por si nos escapa un error. 
-        #Pongo un if que va a poner a la entidad como un cuadrado rojo y se re nota ^^
         self.rect = pg.Rect(posi_x, posi_y, ancho, alto)
         if imagen_surf:
             self.image = pg.transform.scale(imagen_surf, (ancho, alto))
         else:
             RED = (255, 0, 0)
             self.image = pg.Surface((ancho, alto))
-            self.image.fill(RED) #ERROR CATCH >:D
-        #la salud es una misky-herramienta que nos ayudara mas tarde
+            self.image.fill(RED)
         self.hp = 1
         self.max_hp = 1
     def dibujar(self, screen:pg.surface):
@@ -186,7 +181,6 @@ class Planta(NPC):
         self.hp = salud_inicial
         self.max_hp = salud_inicial
         self.viva = True
-        #self.cooldown = cooldown
         self.ultimo_uso = time.time()
         self.cooldown_activo = False
 
@@ -258,7 +252,6 @@ class Girasol(Planta):
             sol_y = self.rect.centery - (c_size // 4) - 30 # Empieza más arriba del girasol
             soles_cayendo.append(Sol(sol_x, sol_y, self.c_size_ref, self.margen_y_ref, self.h_ref, self.ima_sol_ref, es_de_girasol=True))
             self.ultimo_sol_generado = time.time()
-#----Sos nuestra papa favorita <3----
 class Nuez(Planta):
     """
     Representa una planta Nuez. Hereda de Planta y se especializa
@@ -286,18 +279,16 @@ class Nuez(Planta):
             margen_x (int): Margen izquierdo del área de juego.
         """
 
-#----Peeshooter/iceshooter----
 class Guisante(NPC):
     """
     Representa un proyectil Guisante disparado por LanzaGuisantes o LanzaGuisantesFrio.
     Hereda de NPC y se mueve horizontalmente para dañar zombies.
     """
     def __init__(self, posi_x: int, posi_y: int, c_size: int, imagen_surf: pg.surface, daño: int = 0, velocidad: float = 8.0, es_congelante: bool = False):
-        #escalo 40%
         ancho_guisante = int(c_size * 0.4) 
         alto_guisante = int(c_size * 0.4)
         
-        #mini ajustes para que quede en el centro de la boca. Si encuentran mejor cambien
+        #mini ajustes para que quede en el centro de la boca.
         posi_x_salida = posi_x + int(c_size * 0.7) 
         posi_y_salida = posi_y + int(c_size * 0.25) 
 
@@ -316,9 +307,9 @@ class Guisante(NPC):
         """
         self.fila = 0
         self.daño = 1
-        self.velocidad = velocidad #no fps, sino tipo pixeles por segundo?
+        self.velocidad = velocidad
         self.es_congelante = es_congelante
-        self.x = float(self.rect.x) #ara que se mueva fluido en no casillas trabajamos en float, no?
+        self.x = float(self.rect.x)
 
     def actualizar(self, dt:float):
         """
@@ -327,7 +318,7 @@ class Guisante(NPC):
         Input:
             dt (float): Delta time, el tiempo transcurrido desde el último fotograma en segundos.
         """
-        self.x += self.velocidad * dt # dt ya es en segundos, así que la velocidad es pixeles/segundo
+        self.x += self.velocidad * dt
         self.rect.x = int(self.x)
 
     def dibujar(self, screen:pg.surface):
@@ -357,7 +348,6 @@ class LanzaGuisantes(Planta):
             margen_y, margen_x,
             costo=LanzaGuisantes.costo,
             salud_inicial=LanzaGuisantes.salud_inicial,
-            #cooldown=LanzaGuisantes.cooldown
         )
         """
         Inicializa una nueva planta LanzaGuisantes.
@@ -415,7 +405,6 @@ class LanzaGuisantesFrio(LanzaGuisantes):
             fila, col,
             imagen_surf,
             c_size, margen_y, margen_x,
-            #cooldown=LanzaGuisantesFrio.cooldown
         )
         """
         Inicializa una nueva planta LanzaGuisantesFrio.
@@ -521,7 +510,6 @@ class BotonPlanta(Boton):
         self.rect = pg.Rect(x, y, ancho, alto)
         self.tipo_planta = tipo_planta
         self.costo = tipo_planta.costo
-        #self.imagen = pg.transform.scale(imagen_boton_surf, (ancho, alto))
         self.imagen_planta_completa = imagen_planta_completa_surf
         self.tiempo_ultimo_uso = 0
 

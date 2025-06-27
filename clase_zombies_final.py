@@ -1,13 +1,13 @@
 import time
 import pygame as pg
 import random
-from clases_plantas import NPC
+from clases_plantas_final import NPC
 # --- CONSTANTES DE COLORES ---
 RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
 DARK_GRAY = (64, 64, 64)
 BLUE_TINT = (183, 232, 245, 100)
-# --- ZOMBI CLASE BASE ---s
+# --- ZOMBIE CLASE BASE ---
 class Zombie(NPC):
     """Clase base para todos los tipos de zombies.
     Hereda la clase NPC y añade comportamientos especificos a cada zombie.
