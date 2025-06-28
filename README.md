@@ -1,9 +1,7 @@
-# TPFinal_Duarte_Gonzalez_Urquiza
-# https://youtu.be/T4LyruFEoHY
-
 # VIDEOJUEGO - PLANTAS VS ZOMBIES
 Este repositorio contiene todos los archivos necesarios para ejecutar el videojuego, desde estructuras de código hasta soundtrack e imágenes.
-
+Link al video de youtube demostrarivo del juego: 
+# https://youtu.be/T4LyruFEoHY
 ## Archivo principal
 - `main_final`: Contiene el código de ejecución principal del videojuego.
 ## Archivo de funciones 
