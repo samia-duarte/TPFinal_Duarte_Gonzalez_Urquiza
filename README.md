@@ -38,7 +38,7 @@ Ejecuta videojuego principalmente a travéz de una programación orientada a obj
 # *main* 
 Ejecuta toda la lógica general del juego, además aplica manejo de errores y excepciones a archivos dentro de la carpeta assests. Lo que mas se destaca en este código es la implementación del bucle ya que utiliza manejo de eventos pygame que detecta los inputs que recibe del teclado y el click del mouse (salir del juego, plantar, sacar plantas, recolectar soles). Además realiza llamado de funciones y clases de archivos externos, generando actualización de assets y gestiona oleadas de zombies; el bucle rompe al salir de la ventana pygame o cuando llega un segundo zombie a la casa desde la misma fila de la grilla. 
 Por último, se encuentra *wave_data*, clase que se encarga de la generación de oleadas de zombies.
-# *Funciones_dibujos_final* 
+# *funciones_dibujos_final* 
 Contiene funciones y variables relacionadas con la interfaz gráfica de un juego. Su uso principal es para manejar la visualización de elementos como: la grilla del jardín (dibuja el fondo con pasto y líneas de división, la barra lateral izquierda (contiene botones para seleccionar plantas/herramientas y muestra el contador de soles (moneda del juego), botones interactivos para plantas específicas y herramientas. Además, proporciona funciones auxiliares para crear y posicionar estos botones en la barra lateral.
 
 
