@@ -402,12 +402,10 @@ while running:
         
         # 1. Zombie llegó a la casa (Game Over)
         if resultado == 'gameOver':
-            #'''
             fila_destruida = zombie.fila in filas_destruidas
             if not fila_destruida: 
                 filas_destruidas.append(zombie.fila)
                 # Añade todos los zombies de la misma fila
-                zombies_a_eliminar = []
                 for i, z in enumerate(zombis_activos):
                     if z.fila == zombie.fila: 
                         zombies_a_eliminar.append(i) 
@@ -416,7 +414,6 @@ while running:
                         podadora.activa = False
                         break
             else:
-            #'''    
                 # Activa secuencia del Game Over
                 print("¡GAME OVER! Te llegó otro zombie en la misma fila.")
                 game_over = True
