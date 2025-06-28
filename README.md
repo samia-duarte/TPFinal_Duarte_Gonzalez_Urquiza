@@ -33,4 +33,3 @@ Contiene dos subcarpetas con todos los activos a utilizar:
 
 
 Link al video de youtube demostrarivo del juego: https://youtu.be/T4LyruFEoHY
-(Nota de leon que espero que borren, porque no esta el read me?)
