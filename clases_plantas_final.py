@@ -1,8 +1,6 @@
 import time
 import pygame as pg
 import random
-#Bienvenido a la sección de clases de plantas. Por ahora aca vamos a dejar solo a los NPC y plantas
-#Contenidos: Sol, Podadora, NPC, Plantas (todas)
 # --- CONSTANTES DE COLORES ---
 AMARILLO = (255, 255, 0)
 DARK_GREEN = (0, 100, 0)
