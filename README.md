@@ -29,6 +29,28 @@ Contiene dos subcarpetas con todos los activos a utilizar:
   - `zombie_balde🧟‍♂️`: Imagen de zombie con balde en la cabeza, (zombie del juego).
   - `zombie_cono🧟‍♂️`: Imagen de zombie con cono en la cabeza, (zombie del juego).
   - `zombie_n🧟‍♂️`: Imagen de zombie común, (zombie del juego).
+- ### soundtrack:
+  Contiene todos los sonidos implementados en el videojuego:
+  - `plants-vs-zombies-soundtrack-day-stage`: sonido de fondo.
+  - `sonido_game_over`: sonido de partida perdida.
+## Funcionalidades
+Ejecuta videojuego principalmente a travéz de una programación orientada a objetos utiliazando biblioteca de pygame.
+# *main* 
+Ejecuta toda la lógica general del juego, además aplica manejo de errores y excepciones a archivos dentro de la carpeta assests. Lo que mas se destaca en este código es la implementación del bucle ya que utiliza manejo de eventos pygame que detecta los inputs que recibe del teclado y el click del mouse (salir del juego, plantar, sacar plantas, recolectar soles). Además realiza llamado de funciones y clases de archivos externos, generando actualización de assets y gestiona oleadas de zombies; el bucle rompe al salir de la ventana pygame o cuando llega un segundo zombie a la casa desde la misma fila de la grilla. 
+Por último, se encuentra *wave_data*, clase que se encarga de la generación de oleadas de zombies.
+#### Parámetros(*default*): descripción
+- dot_size(5): es el tamaño de los puntos, diámetro de los circulos (en pixeles)
+- ang_R(15°): ángulo de rotación R, inclinación de la trama de puntos rojos (grados) 
+- ang_G(45°): ángulo de rotación G, inclinación de la trama de puntos verdes (grados)
+- ang_B(0°): ángulo de rotación B, inclinación de la trama de puntos azules (grados)
+# *main* 
+Ejecuta toda la lógica general del juego, además aplica manejo de errores y excepciones a archivos dentro de la carpeta assests. Lo que mas se destaca en este código es la implementación del bucle ya que utiliza manejo de eventos pygame que detecta los inputs que recibe del teclado y el click del mouse (salir del juego, plantar, sacar plantas, recolectar soles). Además realiza llamado de funciones y clases de archivos externos, generando actualización de assets y gestiona oleadas de zombies; el bucle rompe al salir de la ventana pygame o cuando llega un segundo zombie a la casa desde la misma fila de la grilla. 
+Por último, se encuentra *wave_data*, clase que se encarga de la generación de oleadas de zombies.
+#### Parámetros(*default*): descripción
+- dot_size(5): es el tamaño de los puntos, diámetro de los circulos (en pixeles)
+- ang_R(15°): ángulo de rotación R, inclinación de la trama de puntos rojos (grados) 
+- ang_G(45°): ángulo de rotación G, inclinación de la trama de puntos verdes (grados)
+- ang_B(0°): ángulo de rotación B, inclinación de la trama de puntos azules (grados)
 
 
 
