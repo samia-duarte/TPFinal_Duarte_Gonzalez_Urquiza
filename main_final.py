@@ -438,7 +438,7 @@ while running:
                 running = False
 
         # 2. Zombie destruyó una planta
-        elif resultado:
+        elif resultado in plantas_en_juego:
             plantas_en_juego.remove(resultado) 
             grilla_ocupada[resultado.fila][resultado.col] = None
 

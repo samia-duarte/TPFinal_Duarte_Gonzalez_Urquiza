@@ -20,7 +20,7 @@ class Zombie(NPC):
     velocidad_ataque_base = 1 
     def __init__(self, fila: int, salud_inicial: int, imagen_surf: pg.surface, c_size: int, margen_x: int, ancho_grilla: int):
         """Inicializa nuevo zombie.
-         Args:
+         Argumentos:
             fila (int): fila del jardín donde aparecerá (de la 0 a la 4).
             salud_inicial (int): puntos de salud iniciales.
             imagen_surf (pygame.Surface): imagen del zombie.
@@ -91,8 +91,16 @@ class Zombie(NPC):
         planta_destruida = None
         self.atacando = False
         if self.esta_slowmow and time.time() >= self.tiempo_fin_slowmow:
-                self.off_slowmow()
-        if self.target_planta and self.target_planta.hp > 0 and self.rect.colliderect(self.target_planta.rect):
+            self.off_slowmow()
+        if self.target_planta:
+            if self.target_planta not in plantas or self.target_planta.hp <= 0:
+                self.target_planta = None
+        if not self.target_planta:
+            for planta in plantas:
+                if planta.fila == self.fila and self.rect.colliderect(planta.rect):
+                    self.target_planta = planta
+                    break
+        if self.target_planta and self.target_planta in plantas:
             self.atacando = True
             if time.time() - self.ultimo_ataque > self.velocidad_ataque:
                 if self.target_planta.recibir_dmg(self.dano_ataque):
@@ -100,14 +108,6 @@ class Zombie(NPC):
                     self.target_planta = None
                 self.ultimo_ataque = time.time()
         else:
-            self.target_planta = None
-            for planta in plantas:
-                if planta.fila == self.fila and self.rect.colliderect(planta.rect):
-                    self.target_planta = planta
-                    self.atacando = True
-                    break
-
-        if not self.atacando:
             self.x -= self.velocidad_actual * dt * 60
             self.rect.x = int(self.x)
 
@@ -172,6 +172,5 @@ class ZombieConBalde(Zombie):
         super().__init__(fila, ZombieConBalde.salud_inicial, imagen_surf, c_size, margen_x, ancho_grilla)
         self.velocidad_actual = self.velocidad_caminando_base
 print('Clases de Zombis cargadas con Éxito!')
-
 
 print('Oleadas cargadas con exito!')
