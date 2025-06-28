@@ -9,7 +9,6 @@ Link al video de youtube demostrarivo del juego:
 ## Archivos de clases
 - `clases_zombies_final`: Contiene todas las clases relacionadas a la creación y manejo de los zombies.
 - `clases_plantas_final`: Contiene todas las clases relacionadas a la creacion y manejo de las plantas.
-  (Nota: en el programa se utiliza `clases_plantas` porque aunque sea el mismo archivo que `clases_plantas_final` por alguna razón no lo toma. Son identicos.)
 ## Carpeta - Assets
 Contiene dos subcarpetas con todos los activos a utilizar:
 - ### imagenes:
@@ -40,7 +39,7 @@ Ejecuta toda la lógica general del juego, además aplica manejo de errores y ex
 Por último, se encuentra *wave_data*, clase que se encarga de la generación de oleadas de zombies.
 # *funciones_dibujos_final* 
 Contiene funciones y variables relacionadas con la interfaz gráfica de un juego. Su uso principal es para manejar la visualización de elementos como: la grilla del jardín (dibuja el fondo con pasto y líneas de división, la barra lateral izquierda (contiene botones para seleccionar plantas/herramientas y muestra el contador de soles (moneda del juego), botones interactivos para plantas específicas y herramientas. Además, proporciona funciones auxiliares para crear y posicionar estos botones en la barra lateral.
-
-
-
-
+# *clase_zombies_final*
+Crea los zombies y hereda la clase NPC. Contiene los comportamientos de los zombies como velocidad, daño de ataque, vida. Las funciones de esta clase se encargan de ir actualizando los valores de estas variables. Tiene clases hijas donde varía su salud e imagen según el tipo de zombie.
+# *clases_plantas_final*
+Contiene los elementos del juego con los que interactúa el usuario. Entre estos los soles que se recolectan (generados por girasol o que caen del cielo), las podadoras defensivas, distintos tipos de plantas como los girasoles que generan soles, nueces que sirven como defensoras, lanzaguisantes normal, lanzaguisantes de hielo (ralentiza a los zombies) y los proyectiles que dañan a los zombies. Además contiene los botones interactivos para seleccionar las plantas y la herramienta como la pala para eliminarlas. 
