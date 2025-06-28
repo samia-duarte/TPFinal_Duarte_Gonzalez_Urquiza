@@ -9,6 +9,7 @@ Este repositorio contiene todos los archivos necesarios para ejecutar el videoju
 ## Archivos de clases
 - `clases_zombies_final`: Contiene todas las clases relacionadas a la creación y manejo de los zombies.
 - `clases_plantas_final`: Contiene todas las clases relacionadas a la creacion y manejo de las plantas.
+  (Nota: en el programa se utiliza `clases_plantas` porque aunque sea el mismo archivo que `clases_plantas_final` por alguna razón no lo toma. Son identicos.)
 ## Carpeta - Assets
 Contiene dos subcarpetas con todos los activos a utilizar:
 - ### imagenes:
