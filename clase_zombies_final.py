@@ -143,7 +143,6 @@ class Zombie(NPC):
 
 class ZombieNormal(Zombie):
     """Es el zombie básico, no tiene ninguna protección."""
-    velocidad_caminando_base = 0.0025
     dano_ataque_base = 1
     salud_inicial = 10
 
@@ -156,7 +155,6 @@ class ZombieNormal(Zombie):
 
 class ZombieConCono(Zombie):
     """Zombie que tiene un cono de protección, aumenta su resistencia"""
-    velocidad_caminando_base = 0.0025
     dano_ataque_base = 1
     salud_inicial = 20
 
@@ -167,7 +165,6 @@ class ZombieConCono(Zombie):
 
 class ZombieConBalde(Zombie):
     """Zombie con balde de metal de protección, es más resistente que los otros."""
-    velocidad_caminando_base = 0.0025
     dano_ataque_base = 1
     salud_inicial = 30
 
